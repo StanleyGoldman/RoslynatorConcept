@@ -37,8 +37,7 @@ namespace RoslynatorConcept
         {
             var slnDir = GetSolutionPath();
 
-            var analyzers = GetAnalyzers(slnDir, "packages\\Microsoft.CodeAnalysis.Analyzers.1.1.0\\analyzers\\dotnet\\cs")
-                .Union(GetAnalyzers(slnDir, "packages\\Roslynator.Analyzers.1.9.0\\analyzers\\dotnet\\cs")).ToArray();
+            var analyzerPaths = GetAnalyzers(slnDir, "packages\\Roslynator.Analyzers.1.9.0\\analyzers\\dotnet\\cs");
 
             var sampleSlnPath = Path.Combine(slnDir, "Sample", "TestConsoleApp1.sln");
             var openSolutionAsync = await MSBuildWorkspace.Create().OpenSolutionAsync(sampleSlnPath);
@@ -47,7 +46,7 @@ namespace RoslynatorConcept
             foreach (var project in projects)
             {
                 var customAnalyzedProject = project;
-                foreach (var analyzer in analyzers)
+                foreach (var analyzer in analyzerPaths)
                 {
                     customAnalyzedProject =
                         customAnalyzedProject.AddAnalyzerReference(new AnalyzerFileReference(analyzer,
